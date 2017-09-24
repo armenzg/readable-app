@@ -1,0 +1,21 @@
+{
+  "name": "readable-frontend",
+  "version": "1.0.0",
+  "description": "Project for Udacity's React nano-degree. It is a basic content and comment app. Users will be able to post content to predefined categories, comment on their posts and other users' posts, and vote on posts and comments. Users will also be able to edit and delete posts and comments.",
+  "main": "src/index.js",
+  "author": "Zambrano Gasparnian, Armen",
+  "license": "MIT",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router": "^4.1.1",
+    "react-router-dom": "4.1.1",
+    "react-scripts": "1.0.13"
+  }
+}

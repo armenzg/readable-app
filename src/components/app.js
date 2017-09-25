@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-import Post from './post';
+import { Post, PostModal } from './post';
 import { getPosts } from '../utils/fetch_data';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      postModalOpen: true,
       posts: [],
     };
   }
@@ -23,12 +24,34 @@ class App extends Component {
     });
   }
 
+  openPostModal() {
+    this.setState(() => ({
+      postModalOpen: true,
+    }));
+  }
+
+  closePostModal() {
+    this.setState(() => ({
+      postModalOpen: false,
+    }));
+  }
+
   render() {
-    const { posts } = this.state;
+    const { postModalOpen, posts } = this.state;
 
     return (
       <div className="App">
-        {(posts.map(post => <Post post={post} />))}
+        {(posts.map(post => (
+          <Post
+            key={post.title}
+            post={post}
+          />
+        )))}
+        <PostModal
+          postModalOpen={postModalOpen}
+          onClose={() => this.closePostModal()}
+          onSubmit={() => 'XXX'}
+        />
       </div>
     );
   }

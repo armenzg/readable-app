@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 
 import { Post, PostModal } from './post';
 import { getPosts } from '../utils/fetch_data';
@@ -7,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      postModalOpen: true,
+      postModalOpen: false,
       posts: [],
     };
   }
@@ -41,6 +42,12 @@ class App extends Component {
 
     return (
       <div className="App">
+        <button
+          onClick={() => this.openPostModal()}
+          className="icon-btn"
+        >
+          <FaPlusSquare size={30} />
+        </button>
         {(posts.map(post => (
           <Post
             key={post.title}

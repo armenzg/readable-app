@@ -19,7 +19,8 @@ Post.propTypes = {
   }).isRequired,
 };
 
-const PostModal = ({ postModalOpen, onClose, onSubmit }) => (
+/* eslint react/prop-types: 0 */
+const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
   <Modal
     className="modal"
     overlayClassName="overlay"
@@ -29,23 +30,26 @@ const PostModal = ({ postModalOpen, onClose, onSubmit }) => (
   >
     <div>
       <h3>Enter your post</h3>
-      <input
-        className="title"
-        type="text"
-        placeholder="Title of post"
-      />
-      <input
-        className="body"
-        type="text"
-      />
-      <button
-        className="icon-btn"
-        onClick={onSubmit}
-      >Submit post</button>
-      <button
-        className="icon-btn"
-        onClick={onClose}
-      >Close</button>
+      <form onSubmit={onSubmit}>
+        <input
+          className="title"
+          name="title"
+          type="text"
+          placeholder="Title of post"
+          onChange={event => handleInputChange(event)}
+        />
+        <textarea
+          className="body"
+          name="body"
+          type="text"
+          onChange={event => handleInputChange(event)}
+        />
+        <input type="submit" value="Submit" />
+        <button
+          className="icon-btn"
+          onClick={onClose}
+        >Close</button>
+      </form>
     </div>
   </Modal>
 );

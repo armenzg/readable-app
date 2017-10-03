@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 
 import { Post, PostModal } from './post';
 import { getPosts } from '../utils/fetch_data';
+import { submitPost, storePosts } from '../actions';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       postModalOpen: false,
-      posts: [],
     };
   }
 
   async componentDidMount() {
     const res = await getPosts();
     const fetchedPosts = await res.json();
-    this.onMount(fetchedPosts);
-  }
-
-  onMount(fetchedPosts) {
-    this.setState({
-      posts: fetchedPosts,
-    });
+    const { loadPosts } = this.props;
+    loadPosts(fetchedPosts);
   }
 
   openPostModal() {
@@ -37,8 +33,20 @@ class App extends Component {
     }));
   }
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
   render() {
-    const { postModalOpen, posts } = this.state;
+    const { postModalOpen } = this.state;
+    /* eslint react/prop-types: 0 */
+    const { addPost, posts } = this.props;
 
     return (
       <div className="App">
@@ -56,12 +64,36 @@ class App extends Component {
         )))}
         <PostModal
           postModalOpen={postModalOpen}
+          handleInputChange={event => this.handleInputChange(event)}
           onClose={() => this.closePostModal()}
-          onSubmit={() => 'XXX'}
+          onSubmit={(event) => {
+            event.preventDefault();
+            addPost({
+              title: event.target.title.value,
+              body: event.target.body.value,
+            });
+            this.closePostModal();
+          }}
         />
       </div>
     );
   }
 }
 
-export default App;
+function mapStateToProps({ posts }) {
+  return {
+    posts: Object.values(posts),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addPost: data => dispatch(submitPost(data)),
+    loadPosts: data => dispatch(storePosts(data)),
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);

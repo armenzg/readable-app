@@ -13,16 +13,19 @@ function posts(state = {}, action) {
       return {
         ...state,
       };
-    case LOAD_POSTS :
+    case LOAD_POSTS : {
       // Return state without modifying it if already have data
       if (!state) {
         return state;
       }
-      // XXX: Normalize posts by id as the key
+      // Normalize posts by id as the key
+      const newState = {};
+      Object.values(action.data).map(post => (
+        (newState[post.id] = post)
+      ));
       // Add the data to the store
-      return {
-        ...action.data,
-      };
+      return newState;
+    }
     default :
       return state;
   }

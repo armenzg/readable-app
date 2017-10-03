@@ -3,6 +3,7 @@ module.exports = {
     "rules": {
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "no-undef": "off",
-      "no-console": "off"
+      "no-console": "off",
+      "no-return-assign": [ 2, "except-parens" ]
     }
 };

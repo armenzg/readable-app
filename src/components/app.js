@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Route } from 'react-router-dom';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 
 import { Post, PostModal } from './post';
@@ -49,33 +50,39 @@ class App extends Component {
     const { addPost, posts } = this.props;
 
     return (
-      <div className="App">
-        <button
-          onClick={() => this.openPostModal()}
-          className="icon-btn"
-        >
-          <FaPlusSquare size={30} />
-        </button>
-        {(posts.map(post => (
-          <Post
-            key={post.title}
-            post={post}
-          />
-        )))}
-        <PostModal
-          postModalOpen={postModalOpen}
-          handleInputChange={event => this.handleInputChange(event)}
-          onClose={() => this.closePostModal()}
-          onSubmit={(event) => {
-            event.preventDefault();
-            addPost({
-              title: event.target.title.value,
-              body: event.target.body.value,
-            });
-            this.closePostModal();
-          }}
-        />
-      </div>
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <div className="App">
+            <button
+              onClick={() => this.openPostModal()}
+              className="icon-btn"
+            >
+              <FaPlusSquare size={30} />
+            </button>
+            {(posts.map(post => (
+              <Post
+                key={post.title}
+                post={post}
+              />
+            )))}
+            <PostModal
+              postModalOpen={postModalOpen}
+              handleInputChange={event => this.handleInputChange(event)}
+              onClose={() => this.closePostModal()}
+              onSubmit={(event) => {
+                event.preventDefault();
+                addPost({
+                  title: event.target.title.value,
+                  body: event.target.body.value,
+                });
+                this.closePostModal();
+              }}
+            />
+          </div>
+        )}
+      />
     );
   }
 }

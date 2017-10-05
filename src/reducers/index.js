@@ -1,23 +1,30 @@
 // Reducer file
 import { combineReducers } from 'redux';
+import { submitPost } from '../utils/fetch_data';
+import guid from '../utils/uuid';
 
 import {
   LOAD_POSTS,
   SUBMIT_POST,
 } from '../actions';
 
-function posts(state = {}, action) {
+const posts = (state = {}, action) => {
   switch (action.type) {
-    case SUBMIT_POST :
-      // XXX: Do something useful
+    case SUBMIT_POST : {
+      // const { author, title, body, category } = action.data;
+      const newPost = {
+        ...action.data,
+        id: guid(),
+        timestamp: Date.now(),
+      };
+      submitPost(newPost);
+      console.log(newPost);
       return {
         ...state,
+        [newPost.id]: newPost,
       };
+    }
     case LOAD_POSTS : {
-      // Return state without modifying it if already have data
-      if (!state) {
-        return state;
-      }
       // Normalize posts by id as the key
       const newState = {};
       Object.values(action.data).map(post => (
@@ -29,7 +36,7 @@ function posts(state = {}, action) {
     default :
       return state;
   }
-}
+};
 
 export default combineReducers({
   posts,

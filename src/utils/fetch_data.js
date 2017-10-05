@@ -1,3 +1,4 @@
+
 const HOST = 'http://localhost:3001';
 const HEADER = {
   headers: {
@@ -15,11 +16,18 @@ export const getPosts = () =>
   fetch(`${HOST}/posts`, HEADER);
 
 // XXX: Review docs
-export const submitPost = post =>
-  fetch(`${HOST}/posts`, {
+export const submitPost = async (post) => {
+  // XXX: add id and timestamp
+  const header = {
+    ...HEADER,
     method: 'POST',
     body: post,
-  });
+  };
+  const ret = await fetch(`${HOST}/posts`, header);
+  const text = await ret.text();
+  console.log('Reply from submitting post.');
+  console.log(text);
+};
 
 export const getPost = id =>
   fetch(`${HOST}/posts/${id}`, HEADER);

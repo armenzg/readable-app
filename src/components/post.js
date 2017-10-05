@@ -3,7 +3,10 @@ import React from 'react';
 import Modal from 'react-modal';
 
 const Post = ({ post }) => (
-  <div>{post.title}</div>
+  <div>
+    <span>{post.title} </span>
+    <a href={`/post/${post.id}`}>Read more</a>
+  </div>
 );
 
 Post.propTypes = {
@@ -31,6 +34,7 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
     <div>
       <h3>Enter your post</h3>
       <form onSubmit={onSubmit}>
+        Title:
         <input
           className="title"
           name="title"
@@ -38,9 +42,24 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
           placeholder="Title of post"
           onChange={event => handleInputChange(event)}
         />
+        Author:
+        <input
+          className="author"
+          name="author"
+          type="text"
+          onChange={event => handleInputChange(event)}
+        />
+        Body:
         <textarea
           className="body"
           name="body"
+          type="text"
+          onChange={event => handleInputChange(event)}
+        />
+        Category:
+        <input
+          className="category"
+          name="category"
           type="text"
           onChange={event => handleInputChange(event)}
         />

@@ -2,11 +2,10 @@
 export const SUBMIT_POST = 'SUBMIT_POST';
 export const LOAD_POSTS = 'LOAD_POSTS';
 
-export const submitPost = ({ title, body }) => (
+export const submitPost = data => (
   {
     type: SUBMIT_POST,
-    title,
-    body,
+    data,
   }
 );
 

@@ -63,7 +63,7 @@ class App extends Component {
             </button>
             {(posts.map(post => (
               <Post
-                key={post.title}
+                key={post.id}
                 post={post}
               />
             )))}
@@ -76,6 +76,8 @@ class App extends Component {
                 addPost({
                   title: event.target.title.value,
                   body: event.target.body.value,
+                  author: event.target.author.value,
+                  category: event.target.category.value,
                 });
                 this.closePostModal();
               }}

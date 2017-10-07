@@ -2,12 +2,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'react-modal';
 
-const Post = ({ post }) => (
-  <div>
-    <span>{post.title} </span>
-    <a href={`/post/${post.id}`}>Read more</a>
-  </div>
-);
+const Post = ({ post, onDelete }) => {
+  const { id, title } = post;
+  return (
+    <div>
+      <span>{title} </span>
+      <a href={`/post/${id}`}>Read more</a>&nbsp;
+      <button
+        onClick={onDelete}
+        value={id}
+      >Delete</button>
+    </div>
+  );
+};
 
 Post.propTypes = {
   post: PropTypes.shape({
@@ -20,6 +27,7 @@ Post.propTypes = {
     title: PropTypes.string,
     voteScore: PropTypes.number,
   }).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 /* eslint react/prop-types: 0 */

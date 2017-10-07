@@ -5,7 +5,7 @@ import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 
 import { Post, PostModal } from './post';
 import { getPosts } from '../utils/fetch_data';
-import { submitPost, storePosts } from '../actions';
+import { submitPost, storePosts, deletePost } from '../actions';
 
 class App extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class App extends Component {
   render() {
     const { postModalOpen } = this.state;
     /* eslint react/prop-types: 0 */
-    const { addPost, posts } = this.props;
+    const { addPost, posts, erasePost } = this.props;
 
     return (
       <Route
@@ -65,6 +65,7 @@ class App extends Component {
               <Post
                 key={post.id}
                 post={post}
+                onDelete={event => erasePost(event.target.value)}
               />
             )))}
             <PostModal
@@ -99,6 +100,7 @@ function mapDispatchToProps(dispatch) {
   return {
     addPost: data => dispatch(submitPost(data)),
     loadPosts: data => dispatch(storePosts(data)),
+    erasePost: id => dispatch(deletePost(id)),
   };
 }
 

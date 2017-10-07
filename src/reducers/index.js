@@ -1,30 +1,32 @@
 // Reducer file
 import { combineReducers } from 'redux';
-import { submitPost } from '../utils/fetch_data';
 import guid from '../utils/uuid';
-
-import {
-  LOAD_POSTS,
-  SUBMIT_POST,
-} from '../actions';
+import * as q from '../utils/fetch_data';
+import * as a from '../actions';
 
 const posts = (state = {}, action) => {
   switch (action.type) {
-    case SUBMIT_POST : {
+    case a.SUBMIT_POST : {
       // const { author, title, body, category } = action.data;
       const newPost = {
         ...action.data,
         id: guid(),
         timestamp: Date.now(),
       };
-      submitPost(newPost);
+      q.submitPost(newPost);
       console.log(newPost);
       return {
         ...state,
         [newPost.id]: newPost,
       };
     }
-    case LOAD_POSTS : {
+    case a.DELETE_POST : {
+      const newState = Object.assign({}, state);
+      delete newState[action.id];
+      q.deletePost(action.id);
+      return newState;
+    }
+    case a.LOAD_POSTS : {
       // Normalize posts by id as the key
       const newState = {};
       Object.values(action.data).map(post => (

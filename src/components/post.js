@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'react-modal';
 
-const Post = ({ post, onDelete }) => {
+const Post = ({ post, onEdit, onDelete }) => {
   const { id, title } = post;
   return (
     <div>
       <span>{title} </span>
-      <a href={`/post/${id}`}>Read more</a>&nbsp;
+      <button
+        onClick={onEdit}
+        value={post}
+      >Edit</button>
       <button
         onClick={onDelete}
         value={id}
@@ -16,22 +19,26 @@ const Post = ({ post, onDelete }) => {
   );
 };
 
+const postType = {
+  author: PropTypes.string,
+  body: PropTypes.string,
+  category: PropTypes.string,
+  deleted: PropTypes.bool,
+  id: PropTypes.string,
+  timestamp: PropTypes.number,
+  title: PropTypes.string,
+  voteScore: PropTypes.number,
+};
+
 Post.propTypes = {
   post: PropTypes.shape({
-    author: PropTypes.string,
-    body: PropTypes.string,
-    category: PropTypes.string,
-    deleted: PropTypes.boolean,
-    id: PropTypes.string,
-    timestamp: PropTypes.number,
-    title: PropTypes.string,
-    voteScore: PropTypes.number,
+    ...postType,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
 /* eslint react/prop-types: 0 */
-const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
+const PostModal = ({ postModalOpen, post, handleInputChange, onClose, onSubmit }) => (
   <Modal
     className="modal"
     overlayClassName="overlay"
@@ -40,14 +47,14 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
     contentLabel="Modal"
   >
     <div>
-      <h3>Enter your post</h3>
+      <h3>Enter/edit your post</h3>
       <form onSubmit={onSubmit}>
         Title:
         <input
           className="title"
           name="title"
           type="text"
-          placeholder="Title of post"
+          value={post.title}
           onChange={event => handleInputChange(event)}
         />
         Author:
@@ -55,6 +62,7 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
           className="author"
           name="author"
           type="text"
+          value={post.author}
           onChange={event => handleInputChange(event)}
         />
         Body:
@@ -62,6 +70,7 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
           className="body"
           name="body"
           type="text"
+          value={post.body}
           onChange={event => handleInputChange(event)}
         />
         Category:
@@ -69,6 +78,7 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
           className="category"
           name="category"
           type="text"
+          value={post.category}
           onChange={event => handleInputChange(event)}
         />
         <input type="submit" value="Submit" />
@@ -83,8 +93,15 @@ const PostModal = ({ postModalOpen, handleInputChange, onClose, onSubmit }) => (
 
 PostModal.propTypes = {
   postModalOpen: PropTypes.bool.isRequired,
+  post: PropTypes.shape({
+    ...postType,
+  }),
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+
+PostModal.defaultProps = {
+  post: {},
 };
 
 export { Post, PostModal };

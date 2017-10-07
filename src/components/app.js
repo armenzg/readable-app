@@ -31,6 +31,7 @@ class App extends Component {
   closePostModal() {
     this.setState(() => ({
       postModalOpen: false,
+      post: {},
     }));
   }
 
@@ -40,52 +41,67 @@ class App extends Component {
     const name = target.name;
 
     this.setState({
-      [name]: value,
+      post: {
+        [name]: value,
+      },
     });
   }
 
   render() {
-    const { postModalOpen } = this.state;
+    const { postModalOpen, post } = this.state;
     /* eslint react/prop-types: 0 */
     const { addPost, posts, erasePost } = this.props;
 
     return (
-      <Route
-        exact
-        path="/"
-        render={() => (
-          <div className="App">
-            <button
-              onClick={() => this.openPostModal()}
-              className="icon-btn"
-            >
-              <FaPlusSquare size={30} />
-            </button>
-            {(posts.map(post => (
-              <Post
-                key={post.id}
+      <div className="App">
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <div className="Posts">
+              <button
+                onClick={() => this.openPostModal()}
+                className="icon-btn"
+              >
+                <FaPlusSquare size={30} />
+              </button>
+              {(posts.map(p => (
+                <Post
+                  key={p.id}
+                  post={p}
+                  onEdit={() => {
+                    this.openPostModal();
+                    this.setState({
+                      post: p,
+                    });
+                  }}
+                  onDelete={event => erasePost(event.target.value)}
+                />
+              )))}
+              <PostModal
+                postModalOpen={postModalOpen}
                 post={post}
-                onDelete={event => erasePost(event.target.value)}
+                handleInputChange={event => this.handleInputChange(event)}
+                onClose={() => this.closePostModal()}
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  if (!post.id) {
+                    addPost({
+                      title: event.target.title.value,
+                      body: event.target.body.value,
+                      author: event.target.author.value,
+                      category: event.target.category.value,
+                    });
+                  } else {
+                    console.log('XXX: Let us edit!');
+                  }
+                  this.closePostModal();
+                }}
               />
-            )))}
-            <PostModal
-              postModalOpen={postModalOpen}
-              handleInputChange={event => this.handleInputChange(event)}
-              onClose={() => this.closePostModal()}
-              onSubmit={(event) => {
-                event.preventDefault();
-                addPost({
-                  title: event.target.title.value,
-                  body: event.target.body.value,
-                  author: event.target.author.value,
-                  category: event.target.category.value,
-                });
-                this.closePostModal();
-              }}
-            />
-          </div>
-        )}
-      />
+            </div>
+          )}
+        />
+      </div>
     );
   }
 }

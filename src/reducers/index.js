@@ -1,8 +1,9 @@
 // Reducer file
 import { combineReducers } from 'redux';
+
+import * as a from '../actions';
 import guid from '../utils/uuid';
 import * as q from '../utils/fetch_data';
-import * as a from '../actions';
 
 const posts = (state = {}, action) => {
   switch (action.type) {
@@ -30,7 +31,23 @@ const posts = (state = {}, action) => {
       // Normalize posts by id as the key
       const newState = {};
       Object.values(action.data).map(post => (
-        (newState[post.id] = post)
+        newState[post.id] = post
+      ));
+      // Add the data to the store
+      return newState;
+    }
+    default :
+      return state;
+  }
+};
+
+const categories = (state = {}, action) => {
+  switch (action.type) {
+    case a.LOAD_CATEGORIES : {
+      // Normalize posts by id as the key
+      const newState = {};
+      Object.values(action.data.categories).map(category => (
+        (newState[category.name] = category.path)
       ));
       // Add the data to the store
       return newState;
@@ -42,4 +59,5 @@ const posts = (state = {}, action) => {
 
 export default combineReducers({
   posts,
+  categories,
 });

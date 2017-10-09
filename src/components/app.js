@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
+import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 
 import { Post, PostModal } from './post';
-import { getPosts } from '../utils/fetch_data';
-import { submitPost, storePosts, deletePost } from '../actions';
+import * as q from '../utils/fetch_data';
+import * as a from '../actions';
 
 class App extends Component {
   constructor(props) {
@@ -16,10 +16,13 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const res = await getPosts();
-    const fetchedPosts = await res.json();
-    const { loadPosts } = this.props;
+    const { loadPosts, loadCategories } = this.props;
+
+    const fetchedPosts = await (await q.getPosts()).json();
     loadPosts(fetchedPosts);
+
+    const fetchedCategories = await (await q.getCategories()).json();
+    loadCategories(fetchedCategories);
   }
 
   openPostModal() {
@@ -50,7 +53,7 @@ class App extends Component {
   render() {
     const { postModalOpen, post } = this.state;
     /* eslint react/prop-types: 0 */
-    const { addPost, posts, erasePost } = this.props;
+    const { posts, addPost, erasePost } = this.props;
 
     return (
       <div className="App">
@@ -106,17 +109,19 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ posts }) {
+function mapStateToProps({ posts, categories }) {
   return {
     posts: Object.values(posts),
+    categories: Object.values(categories),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    addPost: data => dispatch(submitPost(data)),
-    loadPosts: data => dispatch(storePosts(data)),
-    erasePost: id => dispatch(deletePost(id)),
+    addPost: data => dispatch(a.submitPost(data)),
+    erasePost: id => dispatch(a.deletePost(id)),
+    loadCategories: data => dispatch(a.storeCategories(data)),
+    loadPosts: data => dispatch(a.storePosts(data)),
   };
 }
 

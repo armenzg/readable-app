@@ -44,7 +44,6 @@ const posts = (state = {}, action) => {
 const categories = (state = {}, action) => {
   switch (action.type) {
     case a.LOAD_CATEGORIES : {
-      // Normalize posts by id as the key
       const newState = {};
       Object.values(action.data.categories).map(category => (
         (newState[category.name] = category.path)
@@ -57,7 +56,23 @@ const categories = (state = {}, action) => {
   }
 };
 
+const comments = (state = {}, action) => {
+  switch (action.type) {
+    case a.LOAD_COMMENTS : {
+      const newState = {};
+      Object.values(action.data).map(comment => (
+        (newState[comment] = comment)
+      ));
+      // Add the data to the store
+      return newState;
+    }
+    default :
+      return state;
+  }
+};
+
 export default combineReducers({
-  posts,
   categories,
+  comments,
+  posts,
 });

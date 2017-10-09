@@ -16,13 +16,23 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const { loadPosts, loadCategories } = this.props;
+    const fetchComments = async (posts) => {
+      const comments = {};
+      posts.forEach(async (p) => {
+        comments[p.id] = await (await q.getComments(p.id)).json();
+      });
+      return comments;
+    };
+    const { loadCategories, loadComments, loadPosts } = this.props;
 
     const fetchedPosts = await (await q.getPosts()).json();
     loadPosts(fetchedPosts);
 
     const fetchedCategories = await (await q.getCategories()).json();
     loadCategories(fetchedCategories);
+
+    const comments = await fetchComments(fetchedPosts);
+    loadComments(comments);
   }
 
   openPostModal() {
@@ -109,10 +119,11 @@ class App extends Component {
   }
 }
 
-function mapStateToProps({ posts, categories }) {
+function mapStateToProps({ posts, categories, comments }) {
   return {
-    posts: Object.values(posts),
     categories: Object.values(categories),
+    comments: Object.values(comments),
+    posts: Object.values(posts),
   };
 }
 
@@ -121,6 +132,7 @@ function mapDispatchToProps(dispatch) {
     addPost: data => dispatch(a.submitPost(data)),
     erasePost: id => dispatch(a.deletePost(id)),
     loadCategories: data => dispatch(a.storeCategories(data)),
+    loadComments: data => dispatch(a.storeComments(data)),
     loadPosts: data => dispatch(a.storePosts(data)),
   };
 }

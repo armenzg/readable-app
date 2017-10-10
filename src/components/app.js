@@ -13,13 +13,17 @@ class App extends Component {
     this.state = {
       postModalOpen: false,
     };
+    this.openPostModal = this.openPostModal.bind(this);
+    this.closePostModal = this.closePostModal.bind(this);
   }
 
   async componentDidMount() {
     const fetchComments = async (posts) => {
       const comments = {};
       posts.forEach(async (p) => {
-        comments[p.id] = await (await q.getComments(p.id)).json();
+        if (p.id) {
+          comments[p.id] = await (await q.getComments(p.id)).json();
+        }
       });
       return comments;
     };
@@ -48,18 +52,6 @@ class App extends Component {
     }));
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      post: {
-        [name]: value,
-      },
-    });
-  }
-
   render() {
     const { postModalOpen, post } = this.state;
     /* eslint react/prop-types: 0 */
@@ -79,6 +71,7 @@ class App extends Component {
                 <FaPlusSquare size={30} />
               </button>
               {(posts.map(p => (
+                p.id &&
                 <Post
                   key={p.id}
                   post={p}
@@ -92,24 +85,10 @@ class App extends Component {
                 />
               )))}
               <PostModal
+                addPost={addPost}
+                closeModal={this.closePostModal}
                 postModalOpen={postModalOpen}
                 post={post}
-                handleInputChange={event => this.handleInputChange(event)}
-                onClose={() => this.closePostModal()}
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (!post.id) {
-                    addPost({
-                      title: event.target.title.value,
-                      body: event.target.body.value,
-                      author: event.target.author.value,
-                      category: event.target.category.value,
-                    });
-                  } else {
-                    console.log('XXX: Let us edit!');
-                  }
-                  this.closePostModal();
-                }}
               />
             </div>
           )}

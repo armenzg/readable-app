@@ -35,69 +35,137 @@ Post.propTypes = {
     ...postType,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
 };
 
-/* eslint react/prop-types: 0 */
-const PostModal = ({ postModalOpen, post, handleInputChange, onClose, onSubmit }) => (
+class PostForm extends React.Component {
+  constructor(props) {
+    super(props);
+    // eslint-disable-next-line
+    if (this.props.postToEdit.id) {
+      this.state = {
+        ...this.props.postToEdit,
+      };
+    } else {
+      this.state = {
+        author: '',
+        body: '',
+        category: '',
+        title: '',
+      };
+    }
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    if (!this.state.id) {
+      this.props.addPost({
+        title: event.target.title.value,
+        body: event.target.body.value,
+        author: event.target.author.value,
+        category: event.target.category.value,
+      });
+    } else {
+      console.log('XXX: Let us edit!');
+    }
+    this.props.onSubmit(event);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>Enter/edit your post</h3>
+        <form onSubmit={this.onSubmit}>
+          Title:
+          <input
+            className="title"
+            name="title"
+            type="text"
+            value={this.state.title}
+            onChange={this.handleInputChange}
+          />
+          Author:
+          <input
+            className="author"
+            name="author"
+            type="text"
+            value={this.state.author}
+            onChange={this.handleInputChange}
+          />
+          Body:
+          <textarea
+            className="body"
+            name="body"
+            type="text"
+            value={this.state.body}
+            onChange={this.handleInputChange}
+          />
+          Category:
+          <input
+            className="category"
+            name="category"
+            type="text"
+            value={this.state.category}
+            onChange={this.handleInputChange}
+          />
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    );
+  }
+}
+
+PostForm.propTypes = {
+  addPost: PropTypes.func.isRequired,
+  postToEdit: PropTypes.shape({
+    ...postType,
+  }),
+  onSubmit: PropTypes.func.isRequired,
+};
+
+PostForm.defaultProps = {
+  postToEdit: {},
+};
+
+const PostModal = ({ addPost, closeModal, post, postModalOpen }) => (
   <Modal
     className="modal"
     overlayClassName="overlay"
     isOpen={postModalOpen}
-    onRequestClose={onClose}
+    onRequestClose={closeModal}
     contentLabel="Modal"
   >
-    <div>
-      <h3>Enter/edit your post</h3>
-      <form onSubmit={onSubmit}>
-        Title:
-        <input
-          className="title"
-          name="title"
-          type="text"
-          value={post.title}
-          onChange={event => handleInputChange(event)}
-        />
-        Author:
-        <input
-          className="author"
-          name="author"
-          type="text"
-          value={post.author}
-          onChange={event => handleInputChange(event)}
-        />
-        Body:
-        <textarea
-          className="body"
-          name="body"
-          type="text"
-          value={post.body}
-          onChange={event => handleInputChange(event)}
-        />
-        Category:
-        <input
-          className="category"
-          name="category"
-          type="text"
-          value={post.category}
-          onChange={event => handleInputChange(event)}
-        />
-        <input type="submit" value="Submit" />
-        <button
-          className="icon-btn"
-          onClick={onClose}
-        >Close</button>
-      </form>
-    </div>
+    <button
+      className="icon-btn"
+      onClick={closeModal}
+    >Close</button>
+    <PostForm
+      addPost={addPost}
+      onSubmit={closeModal}
+      postToEdit={post}
+    />
   </Modal>
 );
 
 PostModal.propTypes = {
-  postModalOpen: PropTypes.bool.isRequired,
+  addPost: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
   post: PropTypes.shape({
     ...postType,
   }),
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  postModalOpen: PropTypes.bool.isRequired,
 };
 
 PostModal.defaultProps = {

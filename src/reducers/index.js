@@ -8,7 +8,6 @@ import * as q from '../utils/fetch_data';
 const posts = (state = {}, action) => {
   switch (action.type) {
     case a.SUBMIT_POST : {
-      // const { author, title, body, category } = action.data;
       const newPost = {
         ...action.data,
         id: guid(),

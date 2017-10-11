@@ -3,7 +3,9 @@ export const DELETE_POST = 'DELETE_POST';
 export const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
 export const LOAD_COMMENTS = 'LOAD_COMMENTS';
 export const LOAD_POSTS = 'LOAD_POSTS';
+export const SUBMIT_COMMENT = 'SUBMIT_COMMENT';
 export const SUBMIT_POST = 'SUBMIT_POST';
+
 
 export const deletePost = id => (
   {
@@ -28,6 +30,13 @@ export const storeComments = data => (
 export const storePosts = data => (
   {
     type: LOAD_POSTS,
+    data,
+  }
+);
+
+export const submitComment = data => (
+  {
+    type: SUBMIT_COMMENT,
     data,
   }
 );

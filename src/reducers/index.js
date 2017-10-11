@@ -65,6 +65,22 @@ const comments = (state = {}, action) => {
       // Add the data to the store
       return newState;
     }
+    case a.SUBMIT_COMMENT : {
+      const newComment = {
+        id: guid(),
+        timestamp: Date.now(),
+        author: 'Me',
+        body: 'body',
+        parentId: '8xf0y6ziyjabvozdd253nd',
+      };
+      const res = q.postComment(newComment);
+      console.log(res);
+      console.log(newComment);
+      return {
+        ...state,
+        [newComment.id]: newComment,
+      };
+    }
     default :
       return state;
   }

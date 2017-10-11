@@ -3,7 +3,7 @@ import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 
-import { Post, PostModal } from './post';
+import PostModal, { Post } from './post';
 import * as q from '../utils/fetch_data';
 import * as a from '../actions';
 

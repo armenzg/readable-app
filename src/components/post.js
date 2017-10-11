@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'react-modal';
+import { connect } from 'react-redux';
+
+import CommentsContainer from './comments';
 
 const Post = ({ post, onEdit, onDelete }) => {
   const { id, title } = post;
@@ -170,6 +173,7 @@ const PostModal = ({ addPost, closeModal, post, postModalOpen }) => (
       onSubmit={closeModal}
       postToEdit={post}
     />
+    <CommentsContainer postId={post.id} />
   </Modal>
 );
 
@@ -186,4 +190,19 @@ PostModal.defaultProps = {
   post: {},
 };
 
-export { Post, PostModal };
+export { Post };
+
+function mapStateToProps({ posts }) {
+  return {
+    posts: Object.values(posts),
+  };
+}
+
+function mapDispatchToProps() {
+  return {};
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PostModal);

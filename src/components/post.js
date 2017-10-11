@@ -6,15 +6,9 @@ const Post = ({ post, onEdit, onDelete }) => {
   const { id, title } = post;
   return (
     <div>
-      <span>{title} </span>
-      <button
-        onClick={onEdit}
-        value={post}
-      >Edit</button>
-      <button
-        onClick={onDelete}
-        value={id}
-      >Delete</button>
+      <button onClick={onEdit} value={post}>Edit</button>
+      <button onClick={onDelete} value={id}>Delete</button>
+      <span> {title}</span>
     </div>
   );
 };

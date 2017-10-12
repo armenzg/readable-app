@@ -17,7 +17,7 @@ const Post = ({ post, onEdit, onDelete }) => {
   );
 };
 
-const postType = {
+export const postType = {
   author: PropTypes.string,
   body: PropTypes.string,
   category: PropTypes.string,
@@ -157,21 +157,21 @@ PostForm.defaultProps = {
   postToEdit: {},
 };
 
-const PostModal = ({ addPost, closeModal, post, postModalOpen }) => (
+const PostModal = ({ addPost, toggleModal, post, showPostModal }) => (
   <Modal
     className="modal"
     overlayClassName="overlay"
-    isOpen={postModalOpen}
-    onRequestClose={closeModal}
+    isOpen={showPostModal}
+    onRequestClose={toggleModal}
     contentLabel="Modal"
   >
     <button
       className="icon-btn"
-      onClick={closeModal}
+      onClick={toggleModal}
     >Close</button>
     <PostForm
       addPost={addPost}
-      onSubmit={closeModal}
+      onSubmit={toggleModal}
       postToEdit={post}
     />
     <Voting id={post.id} score={post.voteScore} />
@@ -181,11 +181,11 @@ const PostModal = ({ addPost, closeModal, post, postModalOpen }) => (
 
 PostModal.propTypes = {
   addPost: PropTypes.func.isRequired,
-  closeModal: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
   post: PropTypes.shape({
     ...postType,
   }),
-  postModalOpen: PropTypes.bool.isRequired,
+  showPostModal: PropTypes.bool.isRequired,
 };
 
 PostModal.defaultProps = {

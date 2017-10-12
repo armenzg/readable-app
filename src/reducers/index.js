@@ -9,9 +9,11 @@ const posts = (state = {}, action) => {
   switch (action.type) {
     case a.SUBMIT_POST : {
       const newPost = {
-        ...action.data,
         id: guid(),
         timestamp: Date.now(),
+        ...action.data,
+        voteScore: 0,
+        deleted: false,
       };
       q.submitPost(newPost);
       console.log(newPost);

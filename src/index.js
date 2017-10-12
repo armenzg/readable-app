@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
 import './index.css';
-import App from './components/app';
+import AppContainer from './components/app';
 import reducer from './reducers';
 
 const store = createStore(
@@ -19,7 +19,7 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <HashRouter>
-      <App />
+      <AppContainer />
     </HashRouter>
   </Provider>,
   document.getElementById('root'));

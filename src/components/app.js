@@ -2,19 +2,51 @@ import { connect } from 'react-redux';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import PostModal, { Post } from './post';
+import PostModal, { Post, postType } from './post';
 import * as q from '../utils/fetch_data';
 import * as a from '../actions';
 
-class App extends Component {
+const ListPosts = ({ posts, toggleModal, onPostEdit, erasePost }) => (
+  <div className="ListPosts">
+    <button
+      onClick={toggleModal}
+      className="icon-btn"
+    >
+      <FaPlusSquare size={30} />
+    </button>
+    {(posts
+      .filter(p => (p.deleted === false) && (p.id))
+      .map(p => (
+        <Post
+          key={p.id}
+          post={p}
+          onEdit={() => onPostEdit(p)}
+          onDelete={event => erasePost(event.target.value)}
+        />
+      )))}
+  </div>
+);
+
+ListPosts.propTypes = {
+  posts: PropTypes.arrayOf(PropTypes.shape({
+    ...postType,
+  })).isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  onPostEdit: PropTypes.func.isRequired,
+  erasePost: PropTypes.func.isRequired,
+};
+
+class AppContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      postModalOpen: false,
+      showPostModal: false,
     };
-    this.openPostModal = this.openPostModal.bind(this);
-    this.closePostModal = this.closePostModal.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.onPostEdit = this.onPostEdit.bind(this);
   }
 
   async componentDidMount() {
@@ -39,22 +71,27 @@ class App extends Component {
     loadComments(comments);
   }
 
-  openPostModal() {
-    this.setState(() => ({
-      postModalOpen: true,
-    }));
+  onPostEdit(p) {
+    this.toggleModal(p);
   }
 
-  closePostModal() {
-    this.setState(() => ({
-      postModalOpen: false,
-      post: {},
-    }));
+  toggleModal(p) {
+    const { showPostModal } = this.state;
+    if (showPostModal) {
+      this.setState(() => ({
+        showPostModal: false,
+        post: {},
+      }));
+    } else {
+      this.setState(() => ({
+        showPostModal: true,
+        post: p,
+      }));
+    }
   }
 
   render() {
-    const { postModalOpen, post } = this.state;
-    /* eslint react/prop-types: 0 */
+    const { post, showPostModal } = this.state;
     const { posts, addPost, erasePost } = this.props;
 
     return (
@@ -64,31 +101,16 @@ class App extends Component {
           path="/"
           render={() => (
             <div className="Posts">
-              <button
-                onClick={() => this.openPostModal()}
-                className="icon-btn"
-              >
-                <FaPlusSquare size={30} />
-              </button>
-              {(posts
-                .filter(p => (p.deleted === false) && (p.id))
-                .map(p => (
-                  <Post
-                    key={p.id}
-                    post={p}
-                    onEdit={() => {
-                      this.openPostModal();
-                      this.setState({
-                        post: p,
-                      });
-                    }}
-                    onDelete={event => erasePost(event.target.value)}
-                  />
-                )))}
+              <ListPosts
+                posts={posts}
+                toggleModal={this.toggleModal}
+                onPostEdit={this.onPostEdit}
+                erasePost={erasePost}
+              />
               <PostModal
                 addPost={addPost}
-                closeModal={this.closePostModal}
-                postModalOpen={postModalOpen}
+                toggleModal={this.toggleModal}
+                showPostModal={showPostModal}
                 post={post}
               />
             </div>
@@ -98,6 +120,12 @@ class App extends Component {
     );
   }
 }
+
+AppContainer.propTypes = {
+  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  addPost: PropTypes.func.isRequired,
+  erasePost: PropTypes.func.isRequired,
+};
 
 function mapStateToProps({ posts, categories, comments }) {
   return {
@@ -120,4 +148,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(App);
+)(AppContainer);

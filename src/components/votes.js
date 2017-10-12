@@ -12,8 +12,13 @@ const Voting = ({ id, score }) => (
 );
 
 Voting.propTypes = {
-  id: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
+  id: PropTypes.string,
+  score: PropTypes.number,
+};
+
+Voting.defaultProps = {
+  id: undefined,
+  score: undefined,
 };
 
 export default Voting;

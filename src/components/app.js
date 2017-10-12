@@ -70,20 +70,21 @@ class App extends Component {
               >
                 <FaPlusSquare size={30} />
               </button>
-              {(posts.map(p => (
-                p.id &&
-                <Post
-                  key={p.id}
-                  post={p}
-                  onEdit={() => {
-                    this.openPostModal();
-                    this.setState({
-                      post: p,
-                    });
-                  }}
-                  onDelete={event => erasePost(event.target.value)}
-                />
-              )))}
+              {(posts
+                .filter(p => (p.deleted === false) && (p.id))
+                .map(p => (
+                  <Post
+                    key={p.id}
+                    post={p}
+                    onEdit={() => {
+                      this.openPostModal();
+                      this.setState({
+                        post: p,
+                      });
+                    }}
+                    onDelete={event => erasePost(event.target.value)}
+                  />
+                )))}
               <PostModal
                 addPost={addPost}
                 closeModal={this.closePostModal}

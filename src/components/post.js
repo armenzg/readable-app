@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 
 import CommentsContainer from './comments';
+import Voting from './votes';
 
 const Post = ({ post, onEdit, onDelete }) => {
   const { id, title } = post;
@@ -173,6 +174,7 @@ const PostModal = ({ addPost, closeModal, post, postModalOpen }) => (
       onSubmit={closeModal}
       postToEdit={post}
     />
+    <Voting id={post.id} score={post.voteScore} />
     <CommentsContainer postId={post.id} />
   </Modal>
 );

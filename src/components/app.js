@@ -16,16 +16,26 @@ const ListPosts = ({ posts, toggleModal, onPostEdit, erasePost }) => (
     >
       <FaPlusSquare size={30} />
     </button>
-    {(posts
-      .filter(p => (p.deleted === false) && (p.id))
-      .map(p => (
-        <Post
-          key={p.id}
-          post={p}
-          onEdit={() => onPostEdit(p)}
-          onDelete={event => erasePost(event.target.value)}
-        />
-      )))}
+    <table className="list-posts">
+      <tbody>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Title</th>
+          <th>Score</th>
+          <th>Creation time</th>
+        </tr>
+        {(posts
+          .filter(p => (p.deleted === false) && (p.id))
+          .map(p => (
+            <Post
+              key={p.id}
+              post={p}
+              onEdit={() => onPostEdit(p)}
+              onDelete={event => erasePost(event.target.value)}
+            />
+          )))}
+      </tbody>
+    </table>
   </div>
 );
 

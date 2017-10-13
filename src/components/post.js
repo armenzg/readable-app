@@ -7,13 +7,18 @@ import CommentsContainer from './comments';
 import Voting from './votes';
 
 const Post = ({ post, onEdit, onDelete }) => {
-  const { id, title } = post;
+  const { id, title, voteScore, timestamp } = post;
+  const newDate = new Date(timestamp);
   return (
-    <div>
-      <button onClick={onEdit} value={post}>Edit</button>
-      <button onClick={onDelete} value={id}>Delete</button>
-      <span> {title}</span>
-    </div>
+    <tr>
+      <td>
+        <button onClick={onEdit} value={post}>Edit</button>
+        <button onClick={onDelete} value={id}>Delete</button>
+      </td>
+      <td>{title}</td>
+      <td className="score">{voteScore}</td>
+      <td>{`${newDate.toLocaleString()}`}</td>
+    </tr>
   );
 };
 

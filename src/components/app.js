@@ -1,10 +1,12 @@
+import PropTypes from 'prop-types';
+import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import PostModal from './post';
 import ListPosts from './list_posts';
+import ListCategories from './list_categories';
 import * as q from '../utils/fetch_data';
 import * as a from '../actions';
 
@@ -62,7 +64,7 @@ class AppContainer extends Component {
 
   render() {
     const { post, showPostModal } = this.state;
-    const { posts, addPost, erasePost } = this.props;
+    const { posts, categories, addPost, erasePost } = this.props;
 
     return (
       <div className="App">
@@ -71,6 +73,13 @@ class AppContainer extends Component {
           path="/"
           render={() => (
             <div className="Posts">
+              <button
+                onClick={this.toggleModal}
+                className="icon-btn"
+              >
+                <FaPlusSquare size={30} />
+              </button>
+              <ListCategories categories={categories} />
               <ListPosts
                 posts={posts}
                 toggleModal={this.toggleModal}
@@ -93,6 +102,7 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   addPost: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
 };

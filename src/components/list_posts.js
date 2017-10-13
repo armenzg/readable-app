@@ -1,5 +1,4 @@
 import React from 'react';
-import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import PropTypes from 'prop-types';
 
 import { postType } from './post';
@@ -9,13 +8,13 @@ const Post = ({ post, onEdit, onDelete }) => {
   const newDate = new Date(timestamp);
   return (
     <tr>
+      <td>{title}</td>
+      <td className="score">{voteScore}</td>
+      <td>{`${newDate.toLocaleString()}`}</td>
       <td>
         <button onClick={onEdit} value={post}>Edit</button>
         <button onClick={onDelete} value={id}>Delete</button>
       </td>
-      <td>{title}</td>
-      <td className="score">{voteScore}</td>
-      <td>{`${newDate.toLocaleString()}`}</td>
     </tr>
   );
 };
@@ -28,21 +27,16 @@ Post.propTypes = {
   onEdit: PropTypes.func.isRequired,
 };
 
-const ListPosts = ({ posts, toggleModal, onPostEdit, erasePost }) => (
+const ListPosts = ({ posts, onPostEdit, erasePost }) => (
   <div className="ListPosts">
-    <button
-      onClick={toggleModal}
-      className="icon-btn"
-    >
-      <FaPlusSquare size={30} />
-    </button>
+
     <table className="list-posts">
       <tbody>
         <tr>
-          <th>&nbsp;</th>
           <th>Title</th>
           <th>Score</th>
           <th>Creation time</th>
+          <th>&nbsp;</th>
         </tr>
         {(posts
           .filter(p => (p.deleted === false) && (p.id))
@@ -63,7 +57,6 @@ ListPosts.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape({
     ...postType,
   })).isRequired,
-  toggleModal: PropTypes.func.isRequired,
   onPostEdit: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
 };

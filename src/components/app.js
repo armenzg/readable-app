@@ -1,52 +1,12 @@
 import { connect } from 'react-redux';
-import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import PostModal, { Post, postType } from './post';
+import PostModal from './post';
+import ListPosts from './list_posts';
 import * as q from '../utils/fetch_data';
 import * as a from '../actions';
-
-const ListPosts = ({ posts, toggleModal, onPostEdit, erasePost }) => (
-  <div className="ListPosts">
-    <button
-      onClick={toggleModal}
-      className="icon-btn"
-    >
-      <FaPlusSquare size={30} />
-    </button>
-    <table className="list-posts">
-      <tbody>
-        <tr>
-          <th>&nbsp;</th>
-          <th>Title</th>
-          <th>Score</th>
-          <th>Creation time</th>
-        </tr>
-        {(posts
-          .filter(p => (p.deleted === false) && (p.id))
-          .map(p => (
-            <Post
-              key={p.id}
-              post={p}
-              onEdit={() => onPostEdit(p)}
-              onDelete={event => erasePost(event.target.value)}
-            />
-          )))}
-      </tbody>
-    </table>
-  </div>
-);
-
-ListPosts.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    ...postType,
-  })).isRequired,
-  toggleModal: PropTypes.func.isRequired,
-  onPostEdit: PropTypes.func.isRequired,
-  erasePost: PropTypes.func.isRequired,
-};
 
 class AppContainer extends Component {
   constructor(props) {

@@ -6,22 +6,6 @@ import { connect } from 'react-redux';
 import CommentsContainer from './comments';
 import Voting from './votes';
 
-const Post = ({ post, onEdit, onDelete }) => {
-  const { id, title, voteScore, timestamp } = post;
-  const newDate = new Date(timestamp);
-  return (
-    <tr>
-      <td>
-        <button onClick={onEdit} value={post}>Edit</button>
-        <button onClick={onDelete} value={id}>Delete</button>
-      </td>
-      <td>{title}</td>
-      <td className="score">{voteScore}</td>
-      <td>{`${newDate.toLocaleString()}`}</td>
-    </tr>
-  );
-};
-
 export const postType = {
   author: PropTypes.string,
   body: PropTypes.string,
@@ -31,14 +15,6 @@ export const postType = {
   timestamp: PropTypes.number,
   title: PropTypes.string,
   voteScore: PropTypes.number,
-};
-
-Post.propTypes = {
-  post: PropTypes.shape({
-    ...postType,
-  }).isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
 };
 
 class PostForm extends React.Component {
@@ -196,8 +172,6 @@ PostModal.propTypes = {
 PostModal.defaultProps = {
   post: {},
 };
-
-export { Post };
 
 function mapStateToProps({ posts }) {
   return {

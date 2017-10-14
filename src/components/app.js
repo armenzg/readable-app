@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 
 import PostModal from './post';
 import ListPosts from './list_posts';
@@ -95,6 +95,22 @@ class AppContainer extends Component {
             </div>
           )}
         />
+        <Route
+          path="/category/:id"
+          render={({ match }) => (
+            <div>
+              <Link to="/">{'< Back to main view'}</Link>
+              <h2>{match.params.id} category</h2>
+              <ListPosts
+                posts={posts}
+                toggleModal={this.toggleModal}
+                onPostEdit={this.onPostEdit}
+                erasePost={erasePost}
+                category={match.params.id}
+              />
+            </div>
+          )}
+        />
       </div>
     );
   }
@@ -102,7 +118,7 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
   addPost: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
 };

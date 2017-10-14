@@ -27,19 +27,22 @@ Post.propTypes = {
   onEdit: PropTypes.func.isRequired,
 };
 
-const ListPosts = ({ posts, onPostEdit, erasePost }) => (
+const ListPosts = ({ posts, onPostEdit, erasePost, category }) => (
   <div className="ListPosts">
-
     <table className="list-posts">
       <tbody>
         <tr>
           <th>Title</th>
           <th>Score</th>
           <th>Creation time</th>
-          <th>&nbsp;</th>
+          <th>&nbsp;{category}</th>
         </tr>
         {(posts
-          .filter(p => (p.deleted === false) && (p.id))
+          .filter(p => (
+            (p.deleted === false) &&
+            (p.id) &&
+            ((category) ? p.category === category : true)
+          ))
           .map(p => (
             <Post
               key={p.id}
@@ -59,6 +62,11 @@ ListPosts.propTypes = {
   })).isRequired,
   onPostEdit: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
+  category: PropTypes.string,
+};
+
+ListPosts.defaultProps = {
+  category: undefined,
 };
 
 export default ListPosts;

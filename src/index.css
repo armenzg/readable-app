@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 1em;
   padding: 0;
   font-family: sans-serif;
 }
@@ -27,11 +27,11 @@ body {
 }
 .list-categories {
   margin-top: 1em;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 .list-posts {
   margin-top: 1em;
-  margin-left: 4px;
+  /*margin-left: 4px;*/
 }
 .list-posts td {
   text-align: center;

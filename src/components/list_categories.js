@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const Category = ({ name }) => (
-  <span>&nbsp;{name}</span>
+const CategoryLink = ({ name }) => (
+  <span>&nbsp;
+    <Link to={`/category/${name}`}>{name}</Link>
+  </span>
 );
 
-Category.propTypes = {
+CategoryLink.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
@@ -14,7 +17,7 @@ const ListCategories = ({ categories }) => (
     <b>Categories:</b>
     {(categories
       .map(c => (
-        <Category
+        <CategoryLink
           key={c}
           name={c}
         />
@@ -23,7 +26,7 @@ const ListCategories = ({ categories }) => (
 );
 
 ListCategories.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default ListCategories;

@@ -2,7 +2,11 @@ import PropTypes from 'prop-types';
 import FaPlusSquare from 'react-icons/lib/fa/plus-square';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+} from 'react-router-dom';
 
 import PostModal from './post';
 import ListPosts from './list_posts';
@@ -67,51 +71,53 @@ class AppContainer extends Component {
     const { posts, categories, addPost, erasePost } = this.props;
 
     return (
-      <div className="App">
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <div className="Posts">
-              <button
-                onClick={this.toggleModal}
-                className="icon-btn"
-              >
-                <FaPlusSquare size={30} />
-              </button>
-              <ListCategories categories={categories} />
-              <ListPosts
-                posts={posts}
-                toggleModal={this.toggleModal}
-                onPostEdit={this.onPostEdit}
-                erasePost={erasePost}
-              />
-              <PostModal
-                addPost={addPost}
-                toggleModal={this.toggleModal}
-                showPostModal={showPostModal}
-                post={post}
-              />
-            </div>
-          )}
-        />
-        <Route
-          path="/category/:id"
-          render={({ match }) => (
-            <div>
-              <Link to="/">{'< Back to main view'}</Link>
-              <h2>{match.params.id} category</h2>
-              <ListPosts
-                posts={posts}
-                toggleModal={this.toggleModal}
-                onPostEdit={this.onPostEdit}
-                erasePost={erasePost}
-                category={match.params.id}
-              />
-            </div>
-          )}
-        />
-      </div>
+      <Router>
+        <div className="App">
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <div className="Posts">
+                <button
+                  onClick={this.toggleModal}
+                  className="icon-btn"
+                >
+                  <FaPlusSquare size={30} />
+                </button>
+                <ListCategories categories={categories} />
+                <ListPosts
+                  posts={posts}
+                  toggleModal={this.toggleModal}
+                  onPostEdit={this.onPostEdit}
+                  erasePost={erasePost}
+                />
+                <PostModal
+                  addPost={addPost}
+                  toggleModal={this.toggleModal}
+                  showPostModal={showPostModal}
+                  post={post}
+                />
+              </div>
+            )}
+          />
+          <Route
+            path="/category/:id"
+            render={({ match }) => (
+              <div>
+                {'< '}<Link to="/">{'Back to main view'}</Link>
+                <h2>{match.params.id} category</h2>
+                <ListPosts
+                  posts={posts}
+                  toggleModal={this.toggleModal}
+                  onPostEdit={this.onPostEdit}
+                  erasePost={erasePost}
+                  category={match.params.id}
+                />
+              </div>
+            )}
+          />
+        </div>
+      </Router>
     );
   }
 }

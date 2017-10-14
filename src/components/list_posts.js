@@ -27,8 +27,7 @@ Post.propTypes = {
   onEdit: PropTypes.func.isRequired,
 };
 
-const ListPosts = ({ posts, onPostEdit, erasePost, sortCol, invertSorting }) => {
-  console.log(posts);
+const ListPosts = ({ posts, onPostEdit, erasePost, category, sortCol, invertSorting }) => {
   const sortBy = (val, a, b) => {
     if (a && b) {
       if (a[val] > b[val]) {
@@ -38,12 +37,26 @@ const ListPosts = ({ posts, onPostEdit, erasePost, sortCol, invertSorting }) => 
     }
     return a;
   };
+
+  const newPosts = posts.filter(p => (
+    (p.deleted === false) && (p.id) &&
+    ((category) ? p.category === category : true)
+  ));
   if (sortCol) {
-    posts.sort(sortBy(sortCol));
+    newPosts.sort(sortBy(sortCol));
   }
   if (invertSorting) {
-    posts.reverse();
+    newPosts.reverse();
   }
+
+  if (newPosts.length === 0) {
+    return (
+      <div className="ListPosts">
+        No posts were found for this category.
+      </div>
+    );
+  }
+
   return (
     <div className="ListPosts">
       <table className="list-posts">
@@ -54,16 +67,14 @@ const ListPosts = ({ posts, onPostEdit, erasePost, sortCol, invertSorting }) => 
             <th>Creation time</th>
             <th>&nbsp;</th>
           </tr>
-          {(posts
-            .filter(p => (p.deleted === false) && (p.id))
-            .map(p => (
-              <Post
-                key={p.id}
-                post={p}
-                onEdit={() => onPostEdit(p)}
-                onDelete={event => erasePost(event.target.value)}
-              />
-            )))}
+          {(newPosts.map(p => (
+            <Post
+              key={p.id}
+              post={p}
+              onEdit={() => onPostEdit(p)}
+              onDelete={event => erasePost(event.target.value)}
+            />
+          )))}
         </tbody>
       </table>
     </div>
@@ -76,11 +87,13 @@ ListPosts.propTypes = {
   })).isRequired,
   onPostEdit: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
+  category: PropTypes.string,
   sortCol: PropTypes.string,
   invertSorting: PropTypes.bool,
 };
 
 ListPosts.defaultProps = {
+  category: undefined,
   sortCol: undefined,
   invertSorting: false,
 };

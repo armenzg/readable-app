@@ -8,9 +8,9 @@ import {
   Route,
 } from 'react-router-dom';
 
-import PostModal from './post';
-import ListPosts from './list_posts';
 import ListCategories from './list_categories';
+import ListPosts from './list_posts';
+import PostModal from './post';
 import * as q from '../utils/fetch_data';
 import * as a from '../actions';
 
@@ -19,7 +19,6 @@ class AppContainer extends Component {
     super(props);
     this.state = {
       showPostModal: false,
-      invertSorting: true,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -68,7 +67,7 @@ class AppContainer extends Component {
   }
 
   render() {
-    const { post, showPostModal, invertSorting } = this.state;
+    const { post, showPostModal } = this.state;
     const { posts, categories, addPost, erasePost } = this.props;
 
     return (
@@ -91,8 +90,6 @@ class AppContainer extends Component {
                   toggleModal={this.toggleModal}
                   onPostEdit={this.onPostEdit}
                   erasePost={erasePost}
-                  sortCol="timestamp"
-                  invertSorting={invertSorting}
                 />
                 <PostModal
                   addPost={addPost}

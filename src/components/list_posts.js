@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { postType } from './post';
@@ -27,59 +27,28 @@ Post.propTypes = {
   onEdit: PropTypes.func.isRequired,
 };
 
-const ListPosts = ({ posts, onPostEdit, erasePost, category, sortCol, invertSorting }) => {
-  const sortBy = (val, a, b) => {
-    if (a && b) {
-      if (a[val] > b[val]) {
-        return a;
-      }
-      return b;
-    }
-    return a;
-  };
-
-  const newPosts = posts.filter(p => (
-    (p.deleted === false) && (p.id) &&
-    ((category) ? p.category === category : true)
-  ));
-  if (sortCol) {
-    newPosts.sort(sortBy(sortCol));
-  }
-  if (invertSorting) {
-    newPosts.reverse();
-  }
-
-  if (newPosts.length === 0) {
-    return (
-      <div className="ListPosts">
-        No posts were found for this category.
-      </div>
-    );
-  }
-
-  return (
-    <div className="ListPosts">
-      <table className="list-posts">
-        <tbody>
-          <tr>
-            <th>Title</th>
-            <th>Score</th>
-            <th>Creation time</th>
-            <th>&nbsp;</th>
-          </tr>
-          {(newPosts.map(p => (
-            <Post
-              key={p.id}
-              post={p}
-              onEdit={() => onPostEdit(p)}
-              onDelete={event => erasePost(event.target.value)}
-            />
-          )))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+const ListPosts = ({ posts, onPostEdit, erasePost, onSort }) => (
+  <div className="ListPosts">
+    <table className="list-posts">
+      <tbody>
+        <tr>
+          <th onClick={() => onSort('title')}>Title</th>
+          <th onClick={() => onSort('voteScore')}>Score</th>
+          <th onClick={() => onSort('timestamp')}>Creation time</th>
+          <th>&nbsp;</th>
+        </tr>
+        {(posts.map(p => (
+          <Post
+            key={p.id}
+            post={p}
+            onEdit={() => onPostEdit(p)}
+            onDelete={event => erasePost(event.target.value)}
+          />
+        )))}
+      </tbody>
+    </table>
+  </div>
+);
 
 ListPosts.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape({
@@ -87,15 +56,82 @@ ListPosts.propTypes = {
   })).isRequired,
   onPostEdit: PropTypes.func.isRequired,
   erasePost: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
+};
+
+class ListPostsContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sortCol: 'voteScore',
+      reversed: false,
+    };
+    this.sortColumn = this.sortColumn.bind(this);
+  }
+
+  sortColumn(requestedSorting) {
+    const { sortCol, reversed } = this.state;
+    if (requestedSorting === sortCol) {
+      this.setState({ reversed: !reversed });
+    } else {
+      this.setState({ sortCol: requestedSorting });
+    }
+  }
+
+  render() {
+    const { category, posts, onPostEdit, erasePost } = this.props;
+    const { reversed } = this.state;
+
+    const sortBy = (a, b) => {
+      const { sortCol } = this.state;
+      if (a[sortCol] > b[sortCol]) {
+        return 1;
+      } else if (a[sortCol] === b[sortCol]) {
+        return 0;
+      }
+      return -1;
+    };
+
+    const newPosts = posts.filter(p => (
+      (p.deleted === false) && (p.id) &&
+      ((category) ? p.category === category : true)
+    ));
+
+    if (newPosts.length === 0) {
+      return (
+        <div className="ListPosts">
+          No posts were found for this category.
+        </div>
+      );
+    }
+
+    newPosts.sort(sortBy);
+    if (reversed) {
+      newPosts.reverse();
+    }
+
+    return (
+      <ListPosts
+        posts={newPosts}
+        onPostEdit={onPostEdit}
+        erasePost={erasePost}
+        onSort={this.sortColumn}
+      />
+    );
+  }
+}
+
+ListPostsContainer.propTypes = {
   category: PropTypes.string,
-  sortCol: PropTypes.string,
-  invertSorting: PropTypes.bool,
+  posts: PropTypes.arrayOf(PropTypes.shape({
+    ...postType,
+  })).isRequired,
+  onPostEdit: PropTypes.func.isRequired,
+  erasePost: PropTypes.func.isRequired,
 };
 
-ListPosts.defaultProps = {
+ListPostsContainer.defaultProps = {
   category: undefined,
-  sortCol: undefined,
-  invertSorting: false,
 };
 
-export default ListPosts;
+export default ListPostsContainer;
